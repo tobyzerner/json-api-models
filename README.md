@@ -1,7 +1,5 @@
 # json-api-models
 
-[![Build Status](https://img.shields.io/travis/com/tobyzerner/json-api-models.svg?style=flat)](https://travis-ci.com/tobyzerner/json-api-models)
-
 **A lightweight layer for working with [JSON:API](http://jsonapi.org) data on the client-side.**
 
 ```
