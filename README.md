@@ -1,10 +1,14 @@
 # json-api-models
 
-**A lightweight layer for working with [JSON:API](http://jsonapi.org) data.**
+> A lightweight layer for working with [JSON:API](http://jsonapi.org) data.
+
+## Installation
 
 ```
 npm install json-api-models --save
 ```
+
+## Usage
 
 ```ts
 import { Store } from 'json-api-models';
