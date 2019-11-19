@@ -1,6 +1,6 @@
 # json-api-models
 
-**A lightweight layer for working with [JSON:API](http://jsonapi.org) data on the client-side.**
+**A lightweight layer for working with [JSON:API](http://jsonapi.org) data.**
 
 ```
 npm install json-api-models --save

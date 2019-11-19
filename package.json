@@ -1,5 +1,6 @@
 {
   "name": "json-api-models",
+  "description": "A lightweight layer for working with JSON:API data.",
   "version": "0.1.0",
   "description": "JSON:API store",
   "main": "./dist/index.cjs.js",
