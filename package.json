@@ -8,8 +8,9 @@
   "unpkg": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "./dist",
-    "./README.md"
+    "src",
+    "dist",
+    "README.md"
   ],
   "scripts": {
     "test": "jest",
