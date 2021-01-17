@@ -132,7 +132,7 @@ models.model('users', User);
 
 ### API Consumption Tips
 
-This library is completely unopinionated about how you interact with your JSON:API. It merely gives you an easy way to work with the resulting JSON:API data. An example integration with `fetch` is demonstrated below:
+This library is completely unopinionated about how you interact with your JSON:API server. It merely gives you an easy way to work with the resulting JSON:API data. An example integration with `fetch` is demonstrated below:
 
 ```ts
 const models = new Store();
