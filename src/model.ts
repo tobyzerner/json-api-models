@@ -45,10 +45,12 @@ export class Model implements IJsonApiResource {
             Object.assign(this.attributes, data.attributes);
 
             Object.keys(data.attributes).forEach(name => {
-                Object.defineProperty(this, name, {
-                    configurable: true,
-                    get: () => this.attributes[name],
-                });
+                if (! Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), name)) {
+                    Object.defineProperty(this, name, {
+                        configurable: true,
+                        get: () => this.attributes[name],
+                    });
+                }
             });
         }
 
@@ -58,10 +60,12 @@ export class Model implements IJsonApiResource {
 
                 Object.assign(this.relationships[name], relationship);
 
-                Object.defineProperty(this, name, {
-                    configurable: true,
-                    get: () => this.store.find(this.relationships[name].data as IJsonApiIdentifier),
-                });
+                if (! Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), name)) {
+                    Object.defineProperty(this, name, {
+                        configurable: true,
+                        get: () => this.store.find(this.relationships[name].data as IJsonApiIdentifier),
+                    });
+                }
             }
         }
 
