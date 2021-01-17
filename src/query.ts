@@ -9,7 +9,7 @@ function appendable(key: string): boolean {
 }
 
 export class Query {
-    private readonly query: any;
+    public readonly query: any;
 
     public constructor(query: any = {}) {
         this.query = Object.assign({}, query);
