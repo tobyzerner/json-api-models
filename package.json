@@ -11,7 +11,8 @@
   "files": [
     "src",
     "dist",
-    "README.md"
+    "README.md",
+    "!**/.DS_Store"
   ],
   "scripts": {
     "test": "jest",
