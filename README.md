@@ -130,6 +130,21 @@ const models = new Store({
 models.model('users', User);
 ```
 
+#### Attribute Casts
+
+You can define typecasts for attributes on your custom models:
+
+```ts
+class User extends Model {
+    public name: string;
+    public createdAt: Date;
+    
+    protected casts = {
+        createdAt: Date
+    };
+}
+```
+
 ### API Consumption Tips
 
 This library is completely unopinionated about how you interact with your JSON:API server. It merely gives you an easy way to work with the resulting JSON:API data. An example integration with `fetch` is demonstrated below:

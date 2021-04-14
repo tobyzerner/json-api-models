@@ -5,6 +5,10 @@ import {
     IJsonApiResource, TKeyValueObject
 } from './jsonApi';
 
+export type TCastAttributes = {
+    [key: string]: Function;
+}
+
 export class Model implements IJsonApiResource {
     public type: string;
     public id: string;
@@ -13,10 +17,22 @@ export class Model implements IJsonApiResource {
     public meta: TKeyValueObject = {};
     public links: TKeyValueObject = {};
 
+    protected casts: TCastAttributes = {};
+
     [field: string]: any;
 
     constructor(data: IJsonApiResource, protected store: Store) {
         this.merge(data);
+    }
+
+    public getAttribute(name: string): any {
+        const value = this.attributes[name];
+
+        return this.casts[name] ? this.casts[name](value) : value;
+    }
+
+    public getRelationship(name: string): any {
+        return this.store.find(this.relationships[name].data as IJsonApiIdentifier);
     }
 
     /**
@@ -48,7 +64,7 @@ export class Model implements IJsonApiResource {
                 if (! Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), name)) {
                     Object.defineProperty(this, name, {
                         configurable: true,
-                        get: () => this.attributes[name],
+                        get: () => this.getAttribute(name),
                     });
                 }
             });
@@ -63,7 +79,7 @@ export class Model implements IJsonApiResource {
                 if (! Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), name)) {
                     Object.defineProperty(this, name, {
                         configurable: true,
-                        get: () => this.store.find(this.relationships[name].data as IJsonApiIdentifier),
+                        get: () => this.getRelationship(name),
                     });
                 }
             }
