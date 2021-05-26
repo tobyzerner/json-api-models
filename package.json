@@ -17,7 +17,8 @@
   "scripts": {
     "test": "jest",
     "build": "rollup -c",
-    "build:watch": "rollup -cw"
+    "build:watch": "rollup -cw",
+    "release": "release-it"
   },
   "devDependencies": {
     "@release-it/keep-a-changelog": "^2.2.2",
