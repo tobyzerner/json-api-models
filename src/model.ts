@@ -28,7 +28,11 @@ export class Model implements IJsonApiResource {
     public getAttribute(name: string): any {
         const value = this.attributes[name];
 
-        return this.casts[name] ? this.casts[name](value) : value;
+        if (this.casts[name] && value !== null && value !== undefined) {
+            return this.casts[name](value);
+        }
+
+        return value;
     }
 
     public getRelationship(name: string): any {
