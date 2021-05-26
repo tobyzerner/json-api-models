@@ -12,4 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Change compilation target to `es2017` for `Object.entries` support.
 
+## [0.1.0-beta.1] - 2021-01-17
+- Initial release
+
 [Unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.2...HEAD
