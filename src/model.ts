@@ -6,7 +6,7 @@ import {
 } from './jsonApi';
 
 export type TCastAttributes = {
-    [key: string]: Function;
+    [key: string]: FunctionConstructor;
 }
 
 export class Model implements IJsonApiResource {
@@ -27,9 +27,10 @@ export class Model implements IJsonApiResource {
 
     public getAttribute(name: string): any {
         const value = this.attributes[name];
+        const cast = this.casts[name];
 
-        if (this.casts[name] && value !== null && value !== undefined) {
-            return this.casts[name](value);
+        if (cast && value !== null && value !== undefined) {
+            return new cast(value);
         }
 
         return value;
