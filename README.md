@@ -206,10 +206,15 @@ const query = new Query({
     'fields[users]': 'name',
 });
 
-query.add('include', 'bar');
-query.add('fields[users]', 'age');
+query.append('include', 'bar');
+query.append('fields[users]', 'age');
 
-query.toString() // include=foo,bar&fields[users]=name,age
+query.toString(); // include=foo,bar&fields[users]=name,age
+
+query.delete('fields[users]');
+query.set('include', 'replaced');
+
+query.toString(); // include=replaced
 ```
 
 ## Contributing

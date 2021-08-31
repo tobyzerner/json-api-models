@@ -4,10 +4,6 @@ function fixedEncodeURIComponent(str: string): string {
     });
 }
 
-function appendable(key: string): boolean {
-    return key === 'include' || /fields\[[^\]]+]/i.test(key);
-}
-
 export class Query {
     public readonly query: any;
 
@@ -15,13 +11,37 @@ export class Query {
         this.query = Object.assign({}, query);
     }
 
-    public push(key: object | string, value?: any): this {
-        if (typeof key === 'object') {
-            Object.entries(key).map(entry => this.push.apply(this, entry));
-        } else if (appendable(key)) {
-            this.query[key] = (this.query[key] ? this.query[key] + ',' : '') + value;
+    public append(key: string, value: any): this;
+    public append(values: object): this;
+    public append(a: object|string, b?: any): this {
+        if (typeof a === 'object') {
+            Object.entries(a).map(entry => this.append.apply(this, entry));
         } else {
-            this.query[key] = value;
+            this.query[a] = (this.query[a] ? this.query[a] + ',' : '') + b;
+        }
+
+        return this;
+    }
+
+    public set(key: string, value: any): this;
+    public set(values: object): this;
+    public set(a: object|string, b?: any): this {
+        if (typeof a === 'object') {
+            Object.entries(a).map(entry => this.set.apply(this, entry));
+        } else {
+            this.query[a] = b;
+        }
+
+        return this;
+    }
+
+    public delete(key: string): this;
+    public delete(keys: string[]): this;
+    public delete(a: string[]|string): this {
+        if (Array.isArray(a)) {
+            a.forEach(key => this.delete(key));
+        } else {
+            delete this.query[a];
         }
 
         return this;
