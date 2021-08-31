@@ -1,21 +1,27 @@
 import { Store } from './store';
-import { IJsonApiIdentifier, IJsonApiRelationships, IJsonApiResource, TKeyValueObject } from './jsonApi';
-export declare class Model implements IJsonApiResource {
+import { JsonApiIdentifier, JsonApiRelationships, JsonApiResource, KeyValueObject } from './types';
+export declare type TCastAttributes = {
+    [key: string]: FunctionConstructor;
+};
+export declare class Model implements JsonApiResource {
     protected store: Store;
     type: string;
     id: string;
-    attributes: TKeyValueObject;
-    relationships: IJsonApiRelationships;
-    meta: TKeyValueObject;
-    links: TKeyValueObject;
+    attributes: KeyValueObject;
+    relationships: JsonApiRelationships;
+    meta: KeyValueObject;
+    links: KeyValueObject;
+    protected casts: TCastAttributes;
     [field: string]: any;
-    constructor(data: IJsonApiResource, store: Store);
+    constructor(data: JsonApiResource, store: Store);
+    getAttribute(name: string): any;
+    getRelationship(name: string): any;
     /**
      * Make a resource identifier object for this model.
      */
-    identifier(): IJsonApiIdentifier;
+    identifier(): JsonApiIdentifier;
     /**
      * Merge new JSON:API resource data into the model.
      */
-    merge(data: IJsonApiResource): void;
+    merge(data: JsonApiResource): void;
 }

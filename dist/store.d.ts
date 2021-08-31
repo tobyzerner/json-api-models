@@ -1,12 +1,12 @@
 import { Model } from './model';
-import { IJsonApiDocument, IJsonApiIdentifier, IJsonApiResource } from './jsonApi';
+import { JsonApiDocument, JsonApiIdentifier, JsonApiResource } from './types';
 interface Graph {
     [type: string]: {
         [id: string]: Model;
     };
 }
 declare type ModelConstructor = {
-    new (data: IJsonApiResource, store?: Store): Model;
+    new (data: JsonApiResource, store?: Store): Model;
 };
 interface ModelCollection {
     [type: string]: ModelConstructor;
@@ -16,14 +16,14 @@ export declare class Store {
     protected graph: Graph;
     constructor(models?: ModelCollection);
     model(type: string, model: ModelConstructor): void;
-    find(identifier: IJsonApiIdentifier): Model;
-    find(identifiers: IJsonApiIdentifier[]): Model[];
+    find(identifier: JsonApiIdentifier): Model;
+    find(identifiers: JsonApiIdentifier[]): Model[];
     find(type: string, id: string): Model;
     findAll(type: string): Model[];
-    sync(document: IJsonApiDocument): Model | Model[];
-    syncResource(data: IJsonApiIdentifier): Model;
+    sync(document: JsonApiDocument): Model | Model[];
+    syncResource(data: JsonApiIdentifier): Model;
     private createModel;
-    forget(data: IJsonApiIdentifier): void;
+    forget(data: JsonApiIdentifier): void;
     reset(): void;
 }
 export {};
