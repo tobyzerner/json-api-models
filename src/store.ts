@@ -1,9 +1,9 @@
 import { Model } from './model';
 import {
-    IJsonApiDocument,
-    IJsonApiIdentifier,
-    IJsonApiResource,
-} from './jsonApi';
+    JsonApiDocument,
+    JsonApiIdentifier,
+    JsonApiResource,
+} from './types';
 
 interface Graph {
     [type: string]: {
@@ -11,7 +11,7 @@ interface Graph {
     };
 }
 
-type ModelConstructor = { new(data: IJsonApiResource, store?: Store): Model };
+type ModelConstructor = { new(data: JsonApiResource, store?: Store): Model };
 
 interface ModelCollection {
     [type: string]: ModelConstructor;
@@ -26,16 +26,16 @@ export class Store {
         this.models[type] = model;
     }
 
-    public find(identifier: IJsonApiIdentifier): Model;
-    public find(identifiers: IJsonApiIdentifier[]): Model[];
+    public find(identifier: JsonApiIdentifier): Model;
+    public find(identifiers: JsonApiIdentifier[]): Model[];
     public find(type: string, id: string): Model;
-    public find(a: IJsonApiIdentifier | IJsonApiIdentifier[] | string, b?: string) {
+    public find(a: JsonApiIdentifier | JsonApiIdentifier[] | string, b?: string) {
         if (a === null) {
             return null;
         }
 
         if (Array.isArray(a)) {
-            return a.map((identifier: IJsonApiIdentifier) => this.find(identifier));
+            return a.map((identifier: JsonApiIdentifier) => this.find(identifier));
         }
 
         if (typeof a === 'object') {
@@ -54,7 +54,7 @@ export class Store {
             .map(id => this.graph[type][id]);
     }
 
-    public sync(document: IJsonApiDocument): Model | Model[] {
+    public sync(document: JsonApiDocument): Model | Model[] {
         const syncResource = this.syncResource.bind(this);
 
         if ('included' in document) {
@@ -64,7 +64,7 @@ export class Store {
         return Array.isArray(document.data) ? document.data.map(syncResource) : syncResource(document.data);
     }
 
-    public syncResource(data: IJsonApiIdentifier): Model {
+    public syncResource(data: JsonApiIdentifier): Model {
         const { type, id } = data;
 
         this.graph[type] = this.graph[type] || {};
@@ -78,13 +78,13 @@ export class Store {
         return this.graph[type][id];
     }
 
-    private createModel(data: IJsonApiIdentifier): Model {
+    private createModel(data: JsonApiIdentifier): Model {
         const ModelClass = this.models[data.type] || this.models['*'] || Model;
 
         return new ModelClass(data, this);
     }
 
-    public forget(data: IJsonApiIdentifier): void {
+    public forget(data: JsonApiIdentifier): void {
         delete this.graph[data.type][data.id];
     }
 

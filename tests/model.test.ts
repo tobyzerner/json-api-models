@@ -1,6 +1,6 @@
 import { Model, Store } from '../src/index';
 import { catWithFriendDocument, dogDocument } from './payload';
-import { IJsonApiIdentifier } from '../src/jsonApi';
+import { JsonApiIdentifier } from '../src/types';
 
 describe('Model', () => {
     describe('constructor', () => {
@@ -18,7 +18,7 @@ describe('Model', () => {
 
         it('should define relationship getters', () => {
             const storeMock = {
-                find(identifier: IJsonApiIdentifier) {
+                find(identifier: JsonApiIdentifier) {
                     return identifier;
                 }
             };

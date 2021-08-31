@@ -1,27 +1,27 @@
 import { Store } from './store';
 import {
-    IJsonApiIdentifier,
-    IJsonApiRelationships,
-    IJsonApiResource, TKeyValueObject
-} from './jsonApi';
+    JsonApiIdentifier,
+    JsonApiRelationships,
+    JsonApiResource, KeyValueObject
+} from './types';
 
 export type TCastAttributes = {
     [key: string]: FunctionConstructor;
 }
 
-export class Model implements IJsonApiResource {
+export class Model implements JsonApiResource {
     public type: string;
     public id: string;
-    public attributes: TKeyValueObject = {};
-    public relationships: IJsonApiRelationships = {};
-    public meta: TKeyValueObject = {};
-    public links: TKeyValueObject = {};
+    public attributes: KeyValueObject = {};
+    public relationships: JsonApiRelationships = {};
+    public meta: KeyValueObject = {};
+    public links: KeyValueObject = {};
 
     protected casts: TCastAttributes = {};
 
     [field: string]: any;
 
-    constructor(data: IJsonApiResource, protected store: Store) {
+    constructor(data: JsonApiResource, protected store: Store) {
         this.merge(data);
     }
 
@@ -37,13 +37,13 @@ export class Model implements IJsonApiResource {
     }
 
     public getRelationship(name: string): any {
-        return this.store.find(this.relationships[name].data as IJsonApiIdentifier);
+        return this.store.find(this.relationships[name].data as JsonApiIdentifier);
     }
 
     /**
      * Make a resource identifier object for this model.
      */
-    identifier(): IJsonApiIdentifier {
+    identifier(): JsonApiIdentifier {
         return {
             id: this.id,
             type: this.type
@@ -53,7 +53,7 @@ export class Model implements IJsonApiResource {
     /**
      * Merge new JSON:API resource data into the model.
      */
-    merge(data: IJsonApiResource): void {
+    merge(data: JsonApiResource): void {
         if ('type' in data) {
             this.type = data.type;
         }
