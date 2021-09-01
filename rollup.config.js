@@ -19,5 +19,8 @@ export default {
       name: 'JsonApiModels'
     }
   ],
-  plugins: [ typescript(), terser() ]
+  plugins: [
+    typescript({ tsconfig: './tsconfig.json' }),
+    terser()
+  ]
 };

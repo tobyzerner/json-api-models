@@ -1,7 +1,7 @@
 import { Store } from './store';
 import { JsonApiIdentifier, JsonApiRelationships, JsonApiResource, KeyValueObject } from './types';
-export declare type TCastAttributes = {
-    [key: string]: FunctionConstructor;
+export declare type CastAttributes = {
+    [key: string]: (value: any) => any;
 };
 export declare class Model implements JsonApiResource {
     protected store: Store;
@@ -11,7 +11,7 @@ export declare class Model implements JsonApiResource {
     relationships: JsonApiRelationships;
     meta: KeyValueObject;
     links: KeyValueObject;
-    protected casts: TCastAttributes;
+    protected casts: CastAttributes;
     [field: string]: any;
     constructor(data: JsonApiResource, store: Store);
     getAttribute(name: string): any;
