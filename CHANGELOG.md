@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1.0-beta.6] - 2021-09-01
 ### Fixed
 - Fix attribute cast type definition and invoke as function rather than with `new`.
 
@@ -31,7 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0-beta.2] - 2021-01-17
 - Initial release
 
-[Unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.5...HEAD
+[Unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.6...HEAD
+[0.1.0-beta.6]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.5...v0.1.0-beta.6
 [0.1.0-beta.5]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.4...v0.1.0-beta.5
 [0.1.0-beta.4]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.3...v0.1.0-beta.4
 [0.1.0-beta.3]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.1...v0.1.0-beta.3
