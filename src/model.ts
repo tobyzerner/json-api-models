@@ -6,7 +6,11 @@ import {
 } from './types';
 
 export type CastAttributes = {
-    [key: string]: (value: any) => any;
+    [key: string]: StringConstructor | NumberConstructor | BooleanConstructor | ((value: any) => any) | (new(value: any) => any);
+}
+
+function isConstructor(obj: any): obj is (new(value: any) => any) {
+    return !! obj.prototype && !! obj.prototype.constructor.name;
 }
 
 export class Model implements JsonApiResource {
@@ -30,7 +34,11 @@ export class Model implements JsonApiResource {
         const cast = this.casts[name];
 
         if (cast && value !== null && value !== undefined) {
-            return cast(value);
+            if (cast === String || cast === Number || cast === Boolean || ! isConstructor(cast)) {
+                return (cast as any)(value);
+            }
+
+            return new cast(value);
         }
 
         return value;
