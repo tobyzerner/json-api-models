@@ -1,7 +1,7 @@
 import { Store } from './store';
 import { JsonApiIdentifier, JsonApiRelationships, JsonApiResource, KeyValueObject } from './types';
 export declare type CastAttributes = {
-    [key: string]: (value: any) => any;
+    [key: string]: StringConstructor | NumberConstructor | BooleanConstructor | ((value: any) => any) | (new (value: any) => any);
 };
 export declare class Model implements JsonApiResource {
     protected store: Store;

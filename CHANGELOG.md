@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1.0-beta.7] - 2021-09-01
 ### Fixed
 - Fix regression with attribute casting not handling dates correctly, and add more sophisticated handling of primitives, constructables, and callables.
 
@@ -35,7 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0-beta.2] - 2021-01-17
 - Initial release
 
-[Unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.6...HEAD
+[Unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.7...HEAD
+[0.1.0-beta.7]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.6...v0.1.0-beta.7
 [0.1.0-beta.6]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.5...v0.1.0-beta.6
 [0.1.0-beta.5]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.4...v0.1.0-beta.5
 [0.1.0-beta.4]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.3...v0.1.0-beta.4
