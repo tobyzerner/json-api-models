@@ -5,8 +5,8 @@ import {
     JsonApiResource, KeyValueObject
 } from './types';
 
-export type TCastAttributes = {
-    [key: string]: FunctionConstructor;
+export type CastAttributes = {
+    [key: string]: (value: any) => any;
 }
 
 export class Model implements JsonApiResource {
@@ -17,7 +17,7 @@ export class Model implements JsonApiResource {
     public meta: KeyValueObject = {};
     public links: KeyValueObject = {};
 
-    protected casts: TCastAttributes = {};
+    protected casts: CastAttributes = {};
 
     [field: string]: any;
 
@@ -30,7 +30,7 @@ export class Model implements JsonApiResource {
         const cast = this.casts[name];
 
         if (cast && value !== null && value !== undefined) {
-            return new cast(value);
+            return cast(value);
         }
 
         return value;
