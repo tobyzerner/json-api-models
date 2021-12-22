@@ -26,9 +26,9 @@ export class Store {
         this.models[type] = model;
     }
 
-    public find(identifier: JsonApiIdentifier): Model;
-    public find(identifiers: JsonApiIdentifier[]): Model[];
-    public find(type: string, id: string): Model;
+    public find<T extends Model = Model>(identifier: JsonApiIdentifier): T;
+    public find<T extends Model = Model>(identifiers: JsonApiIdentifier[]): T[];
+    public find<T extends Model = Model>(type: string, id: string): T;
     public find(a: JsonApiIdentifier | JsonApiIdentifier[] | string, b?: string) {
         if (a === null) {
             return null;
@@ -45,7 +45,7 @@ export class Store {
         return (this.graph[a] && this.graph[a][b]) || null;
     }
 
-    public findAll(type: string): Model[] {
+    public findAll<T extends Model = Model>(type: string): T[] {
         if (! this.graph[type]) {
             return [];
         }
@@ -54,7 +54,7 @@ export class Store {
             .map(id => this.graph[type][id]);
     }
 
-    public sync(document: JsonApiDocument): Model | Model[] {
+    public sync<T extends Model | Model[] = Model>(document: JsonApiDocument): T {
         const syncResource = this.syncResource.bind(this);
 
         if ('included' in document) {
@@ -64,7 +64,7 @@ export class Store {
         return Array.isArray(document.data) ? document.data.map(syncResource) : syncResource(document.data);
     }
 
-    public syncResource(data: JsonApiIdentifier): Model {
+    public syncResource<T extends Model = Model>(data: JsonApiIdentifier): T {
         const { type, id } = data;
 
         this.graph[type] = this.graph[type] || {};
@@ -78,7 +78,7 @@ export class Store {
         return this.graph[type][id];
     }
 
-    private createModel(data: JsonApiIdentifier): Model {
+    private createModel<T extends Model = Model>(data: JsonApiIdentifier): T {
         const ModelClass = this.models[data.type] || this.models['*'] || Model;
 
         return new ModelClass(data, this);
