@@ -11,7 +11,7 @@ interface Graph {
     };
 }
 
-type ModelConstructor = { new(data: JsonApiResource, store: Store): Model };
+export type ModelConstructor = { new(data: JsonApiResource, store: Store): Model };
 
 interface ModelCollection {
     [type: string]: ModelConstructor;
