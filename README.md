@@ -109,9 +109,9 @@ You can define custom model classes to add your own functionality. Custom models
 ```ts
 import { Model } from 'json-api-models';
 
-class User extends Model {
-    public name: string;
-    public age: number;
+class User extends Model<'users'> {
+    public declare name: string;
+    public declare age: number;
     
     get firstName() {
         return this.name.split(' ')[0];
@@ -119,15 +119,12 @@ class User extends Model {
 }
 ```
 
-Register your custom models with the store either during construction, or with the `model` method:
+Register your custom models with the store during construction:
 
 ```ts
 const models = new Store({
-    'users': User
+    users: User,
 });
-
-// or
-models.model('users', User);
 ```
 
 #### Attribute Casts
@@ -135,12 +132,12 @@ models.model('users', User);
 You can define typecasts for attributes on your custom models:
 
 ```ts
-class User extends Model {
-    public name: string;
-    public createdAt: Date;
+class User extends Model<'users'> {
+    declare public name: string;
+    declare public createdAt: Date;
     
     protected casts = {
-        createdAt: Date
+        createdAt: Date,
     };
 }
 ```
@@ -162,7 +159,7 @@ function api(url, options = {}) {
     }
 
     return fetch('http://example.org/api/' + url, options)
-    	.then(response => {
+    	.then(async response => {
         	if (response.status === 204) {
                 return { response };
             } else {

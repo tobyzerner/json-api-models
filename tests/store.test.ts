@@ -1,4 +1,4 @@
-import { Model, Store } from '../src/index';
+import { Model, Store } from '../src';
 import { catWithFriendDocument, dogDocument, dogsDocument } from './payload';
 
 const store = new Store();
@@ -47,11 +47,10 @@ describe('Store', () => {
         });
     });
 
-    describe('model', () => {
-        it('should allow using a custom model', () => {
-            const Dog = class extends Model {
-            };
-            store.model('dogs', Dog);
+    describe('constructor', () => {
+        it('should allow using custom models', () => {
+            const Dog = class extends Model {};
+            const store = new Store({ dogs: Dog });
             store.sync(dogDocument);
             const model = store.find('dogs', '1');
             expect(model).toBeInstanceOf(Dog);

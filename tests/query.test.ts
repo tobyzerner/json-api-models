@@ -1,4 +1,4 @@
-import { Query } from '../src/query';
+import { Query } from '../src';
 
 describe('Query', () => {
     describe('constructor', () => {

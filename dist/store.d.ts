@@ -1,28 +1,30 @@
 import { Model } from './model';
 import { JsonApiDocument, JsonApiIdentifier, JsonApiResource } from './types';
-interface Graph {
+declare type Graph = {
     [type: string]: {
-        [id: string]: Model;
+        [id: string]: any;
     };
-}
-declare type ModelConstructor = {
-    new (data: JsonApiResource, store?: Store): Model;
 };
-interface ModelCollection {
-    [type: string]: ModelConstructor;
-}
-export declare class Store {
-    models: ModelCollection;
+export declare type ModelConstructor<Type extends string> = {
+    new (data: JsonApiResource<Type>, store: Store): Model<Type>;
+};
+export declare type ModelCollection<Models> = {
+    [Type in keyof Models & string]: ModelConstructor<Type>;
+} & {
+    '*'?: ModelConstructor<any>;
+};
+export declare type ModelForType<Type extends string, Models extends ModelCollection<Models>> = Type extends keyof Models ? InstanceType<Models[Type]> : Model;
+export declare class Store<Models extends ModelCollection<Models> = any> {
+    models: Models;
     protected graph: Graph;
-    constructor(models?: ModelCollection);
-    model(type: string, model: ModelConstructor): void;
-    find(identifier: JsonApiIdentifier): Model;
-    find(identifiers: JsonApiIdentifier[]): Model[];
-    find(type: string, id: string): Model;
-    findAll(type: string): Model[];
-    sync(document: JsonApiDocument): Model | Model[];
-    syncResource(data: JsonApiIdentifier): Model;
-    private createModel;
+    constructor(models?: Models);
+    find<Type extends string>(identifier: JsonApiIdentifier<Type>): ModelForType<Type, Models> | null;
+    find<Type extends string>(identifiers: JsonApiIdentifier<Type>[]): ModelForType<Type, Models>[];
+    find<Type extends string>(type: Type, id: string): ModelForType<Type, Models> | null;
+    findAll<Type extends string>(type: Type): ModelForType<Type, Models>[];
+    sync<Type extends string>(document: JsonApiDocument<Type>): ModelForType<Type, Models> | ModelForType<Type, Models>[] | null;
+    syncResource<Type extends string>(data: JsonApiResource<Type>): ModelForType<Type, Models>;
+    protected createModel<Type extends string>(data: JsonApiResource<Type>): ModelForType<Type, Models>;
     forget(data: JsonApiIdentifier): void;
     reset(): void;
 }

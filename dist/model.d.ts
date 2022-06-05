@@ -3,9 +3,9 @@ import { JsonApiIdentifier, JsonApiRelationships, JsonApiResource, KeyValueObjec
 export declare type CastAttributes = {
     [key: string]: StringConstructor | NumberConstructor | BooleanConstructor | ((value: any) => any) | (new (value: any) => any);
 };
-export declare class Model implements JsonApiResource {
+export declare class Model<Type extends string = any> implements JsonApiResource<Type> {
     protected store: Store;
-    type: string;
+    type: Type;
     id: string;
     attributes: KeyValueObject;
     relationships: JsonApiRelationships;
@@ -13,15 +13,15 @@ export declare class Model implements JsonApiResource {
     links: KeyValueObject;
     protected casts: CastAttributes;
     [field: string]: any;
-    constructor(data: JsonApiResource, store: Store);
+    constructor(data: JsonApiResource<Type>, store: Store);
     getAttribute(name: string): any;
     getRelationship(name: string): any;
     /**
      * Make a resource identifier object for this model.
      */
-    identifier(): JsonApiIdentifier;
+    identifier(): JsonApiIdentifier<Type>;
     /**
      * Merge new JSON:API resource data into the model.
      */
-    merge(data: JsonApiResource): void;
+    merge(data: Partial<JsonApiResource<Type>>): void;
 }

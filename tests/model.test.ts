@@ -1,6 +1,5 @@
-import { Model, Store } from '../src/index';
+import { JsonApiIdentifier, Model, Store } from '../src';
 import { catWithFriendDocument, dogDocument } from './payload';
-import { JsonApiIdentifier } from '../src/types';
 
 describe('Model', () => {
     describe('constructor', () => {

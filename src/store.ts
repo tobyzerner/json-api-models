@@ -1,41 +1,35 @@
 import { Model } from './model';
-import {
-    JsonApiDocument,
-    JsonApiIdentifier,
-    JsonApiResource,
-} from './types';
+import { JsonApiDocument, JsonApiIdentifier, JsonApiResource } from './types';
 
-interface Graph {
+type Graph = {
     [type: string]: {
-        [id: string]: Model;
+        [id: string]: any;
     };
-}
+};
 
-export type ModelConstructor = { new(data: JsonApiResource, store: Store): Model };
+export type ModelConstructor<Type extends string> = {
+    new(data: JsonApiResource<Type>, store: Store): Model<Type>;
+};
 
-interface ModelCollection {
-    [type: string]: ModelConstructor;
-}
+export type ModelCollection<Models> = { [Type in keyof Models & string]: ModelConstructor<Type> } & { '*'?: ModelConstructor<any> };
 
-export class Store {
+export type ModelForType<Type extends string, Models extends ModelCollection<Models>> = Type extends keyof Models ? InstanceType<Models[Type]> : Model;
+
+export class Store<Models extends ModelCollection<Models> = any> {
     protected graph: Graph = {};
 
-    public constructor(public models: ModelCollection = {}) {}
+    public constructor(public models: Models = {} as Models) {}
 
-    public model(type: string, model: ModelConstructor): void {
-        this.models[type] = model;
-    }
-
-    public find<T extends Model = Model>(identifier: JsonApiIdentifier): T;
-    public find<T extends Model = Model>(identifiers: JsonApiIdentifier[]): T[];
-    public find<T extends Model = Model>(type: string, id: string): T;
-    public find(a: JsonApiIdentifier | JsonApiIdentifier[] | string, b?: string) {
+    public find<Type extends string>(identifier: JsonApiIdentifier<Type>): ModelForType<Type, Models> | null;
+    public find<Type extends string>(identifiers: JsonApiIdentifier<Type>[]): ModelForType<Type, Models>[];
+    public find<Type extends string>(type: Type, id: string): ModelForType<Type, Models> | null;
+    public find<Type extends string>(a: JsonApiIdentifier<Type> | JsonApiIdentifier<Type>[] | string, b?: string) {
         if (a === null) {
             return null;
         }
 
         if (Array.isArray(a)) {
-            return a.map((identifier: JsonApiIdentifier) => this.find(identifier));
+            return a.map((identifier: JsonApiIdentifier<Type>) => this.find(identifier));
         }
 
         if (typeof a === 'object') {
@@ -45,7 +39,7 @@ export class Store {
         return (this.graph[a] && this.graph[a][b]) || null;
     }
 
-    public findAll<T extends Model = Model>(type: string): T[] {
+    public findAll<Type extends string>(type: Type): ModelForType<Type, Models>[] {
         if (! this.graph[type]) {
             return [];
         }
@@ -54,17 +48,19 @@ export class Store {
             .map(id => this.graph[type][id]);
     }
 
-    public sync<T extends Model | Model[] = Model>(document: JsonApiDocument): T {
+    public sync<Type extends string>(document: JsonApiDocument<Type>): ModelForType<Type, Models> | ModelForType<Type, Models>[] | null {
         const syncResource = this.syncResource.bind(this);
 
         if ('included' in document) {
             document.included.map(syncResource);
         }
 
-        return Array.isArray(document.data) ? document.data.map(syncResource) : syncResource(document.data);
+        return Array.isArray(document.data)
+            ? document.data.map(syncResource)
+            : syncResource(document.data);
     }
 
-    public syncResource<T extends Model = Model>(data: JsonApiIdentifier): T {
+    public syncResource<Type extends string>(data: JsonApiResource<Type>): ModelForType<Type, Models> {
         const { type, id } = data;
 
         this.graph[type] = this.graph[type] || {};
@@ -78,10 +74,10 @@ export class Store {
         return this.graph[type][id];
     }
 
-    private createModel<T extends Model = Model>(data: JsonApiIdentifier): T {
-        const ModelClass = this.models[data.type] || this.models['*'] || Model;
+    protected createModel<Type extends string>(data: JsonApiResource<Type>): ModelForType<Type, Models> {
+        const ModelClass = this.models[data.type as keyof Models] || this.models['*'] || Model;
 
-        return new ModelClass(data, this);
+        return new ModelClass(data, this) as ModelForType<Type, Models>;
     }
 
     public forget(data: JsonApiIdentifier): void {
