@@ -1,12 +1,22 @@
 import { Store } from './store';
-import { JsonApiIdentifier, JsonApiRelationships, JsonApiResource, KeyValueObject } from './types';
+import {
+    JsonApiIdentifier,
+    JsonApiRelationships,
+    JsonApiResource,
+    KeyValueObject,
+} from './types';
 
 export type CastAttributes = {
-    [key: string]: StringConstructor | NumberConstructor | BooleanConstructor | ((value: any) => any) | (new(value: any) => any);
-}
+    [key: string]:
+        | StringConstructor
+        | NumberConstructor
+        | BooleanConstructor
+        | ((value: any) => any)
+        | (new (value: any) => any);
+};
 
-function isConstructor(obj: any): obj is (new(value: any) => any) {
-    return !! obj.prototype && !! obj.prototype.constructor.name;
+function isConstructor(obj: any): obj is new (value: any) => any {
+    return !!obj.prototype && !!obj.prototype.constructor.name;
 }
 
 export class Model<Type extends string = any> implements JsonApiResource<Type> {
@@ -30,7 +40,12 @@ export class Model<Type extends string = any> implements JsonApiResource<Type> {
         const cast = this.casts[name];
 
         if (cast && value !== null && value !== undefined) {
-            if (cast === String || cast === Number || cast === Boolean || ! isConstructor(cast)) {
+            if (
+                cast === String ||
+                cast === Number ||
+                cast === Boolean ||
+                !isConstructor(cast)
+            ) {
                 return (cast as any)(value);
             }
 
@@ -43,7 +58,9 @@ export class Model<Type extends string = any> implements JsonApiResource<Type> {
     public getRelationship(name: string): any {
         const data = this.relationships[name].data;
         // https://github.com/microsoft/TypeScript/issues/14107
-        return Array.isArray(data) ? this.store.find(data) : this.store.find(data);
+        return Array.isArray(data)
+            ? this.store.find(data)
+            : this.store.find(data);
     }
 
     /**
@@ -52,7 +69,7 @@ export class Model<Type extends string = any> implements JsonApiResource<Type> {
     identifier(): JsonApiIdentifier<Type> {
         return {
             id: this.id,
-            type: this.type
+            type: this.type,
         };
     }
 
@@ -71,11 +88,15 @@ export class Model<Type extends string = any> implements JsonApiResource<Type> {
         if ('attributes' in data) {
             Object.assign(this.attributes, data.attributes);
 
-            Object.keys(data.attributes).forEach(name => {
+            Object.keys(data.attributes).forEach((name) => {
                 if (
-                    Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), name)
-                    || Object.getOwnPropertyDescriptor(this, name)
-                ) return;
+                    Object.getOwnPropertyDescriptor(
+                        Object.getPrototypeOf(this),
+                        name
+                    ) ||
+                    Object.getOwnPropertyDescriptor(this, name)
+                )
+                    return;
 
                 this[name] = null;
 
@@ -88,24 +109,30 @@ export class Model<Type extends string = any> implements JsonApiResource<Type> {
         }
 
         if ('relationships' in data) {
-            Object.entries(data.relationships).forEach(([name, relationship]) => {
-                this.relationships[name] = this.relationships[name] || {};
+            Object.entries(data.relationships).forEach(
+                ([name, relationship]) => {
+                    this.relationships[name] = this.relationships[name] || {};
 
-                Object.assign(this.relationships[name], relationship);
+                    Object.assign(this.relationships[name], relationship);
 
-                if (
-                    Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), name)
-                    || Object.getOwnPropertyDescriptor(this, name)
-                ) return;
+                    if (
+                        Object.getOwnPropertyDescriptor(
+                            Object.getPrototypeOf(this),
+                            name
+                        ) ||
+                        Object.getOwnPropertyDescriptor(this, name)
+                    )
+                        return;
 
-                this[name] = null;
+                    this[name] = null;
 
-                Object.defineProperty(this, name, {
-                    get: () => this.getRelationship(name),
-                    configurable: true,
-                    enumerable: true,
-                });
-            });
+                    Object.defineProperty(this, name, {
+                        get: () => this.getRelationship(name),
+                        configurable: true,
+                        enumerable: true,
+                    });
+                }
+            );
         }
 
         if ('links' in data) {

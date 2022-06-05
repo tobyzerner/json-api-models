@@ -64,7 +64,7 @@ describe('Query', () => {
     describe('delete', () => {
         it('should accept a key', () => {
             const query = new Query({
-                foo: 'bar'
+                foo: 'bar',
             });
             query.delete('foo');
             expect(query.toString()).toBe('');

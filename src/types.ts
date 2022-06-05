@@ -1,6 +1,6 @@
 export type KeyValueObject = {
     [key: string]: any;
-}
+};
 
 export interface JsonApiDocument<Type extends string = string> {
     data: JsonApiResource<Type> | JsonApiResource<Type>[];
@@ -14,7 +14,8 @@ export interface JsonApiIdentifier<Type extends string = string> {
     id: string;
 }
 
-export interface JsonApiResource<Type extends string = string> extends JsonApiIdentifier<Type> {
+export interface JsonApiResource<Type extends string = string>
+    extends JsonApiIdentifier<Type> {
     attributes?: KeyValueObject;
     relationships?: JsonApiRelationships;
     meta?: KeyValueObject;
@@ -31,10 +32,12 @@ export interface JsonApiRelationship<Type extends string = string> {
     links?: KeyValueObject;
 }
 
-export interface JsonApiRelationshipToOne<Type extends string = string> extends JsonApiRelationship<Type> {
+export interface JsonApiRelationshipToOne<Type extends string = string>
+    extends JsonApiRelationship<Type> {
     data?: JsonApiIdentifier<Type> | null;
 }
 
-export interface JsonApiRelationshipToMany<Type extends string = string> extends JsonApiRelationship<Type> {
+export interface JsonApiRelationshipToMany<Type extends string = string>
+    extends JsonApiRelationship<Type> {
     data?: JsonApiIdentifier<Type>[];
 }

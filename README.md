@@ -22,20 +22,22 @@ models.sync({
         id: '1',
         attributes: { name: 'Toby' },
         relationships: {
-            dog: { data: { type: 'dogs', id: '1' }}
-        }
+            dog: { data: { type: 'dogs', id: '1' } },
+        },
     },
-    included: [{
-        type: 'dogs',
-        id: '1',
-        attributes: { name: 'Rosie' }
-    }]
+    included: [
+        {
+            type: 'dogs',
+            id: '1',
+            attributes: { name: 'Rosie' },
+        },
+    ],
 });
 
 // Resource data is transformed into easy-to-consume models
 const human = models.find('humans', '1');
-human.name // Toby
-human.dog // { type: 'dogs', id: '1', name: 'Rosie' }
+human.name; // Toby
+human.dog; // { type: 'dogs', id: '1', name: 'Rosie' }
 ```
 
 ### Syncing JSON:API Data
@@ -54,7 +56,7 @@ You can also sync an individual resource using the `syncResource` method:
 const model = models.syncResource({
     type: 'users',
     id: '1',
-    attributes: { name: 'Toby' }
+    attributes: { name: 'Toby' },
 });
 ```
 
@@ -67,7 +69,7 @@ const model = models.find('users', '1');
 const model = models.find({ type: 'users', id: '1' });
 const models = models.find([
     { type: 'users', id: '1' },
-    { type: 'users', id: '2' }
+    { type: 'users', id: '2' },
 ]);
 ```
 
@@ -79,19 +81,19 @@ const models = models.findAll('users');
 
 ### Working with Models
 
-Models are a *superset* of JSON:API resource objects, meaning they contain all of the members you would expect (`type`, `id`, `attributes`, `relationships`, `meta`, `links`) plus some additional functionality.
+Models are a _superset_ of JSON:API resource objects, meaning they contain all of the members you would expect (`type`, `id`, `attributes`, `relationships`, `meta`, `links`) plus some additional functionality.
 
 Getters are automatically defined for all fields, allowing you to easily access their contents. Relationship fields are automatically resolved to their related models (if present within the store):
 
 ```ts
-model.name // => model.attributes.name
-model.dog // => models.find(model.relationships.dog.data)
+model.name; // => model.attributes.name
+model.dog; // => models.find(model.relationships.dog.data)
 ```
 
 To easily retrieve a resource identifier object for the model, the `identifier` method is available. This is useful when constructing relationships in JSON:API request documents.
 
 ```ts
-model.identifier() // { type: 'users', id: '1' }
+model.identifier(); // { type: 'users', id: '1' }
 ```
 
 ### Forgetting Models
@@ -112,7 +114,7 @@ import { Model } from 'json-api-models';
 class User extends Model<'users'> {
     public declare name: string;
     public declare age: number;
-    
+
     get firstName() {
         return this.name.split(' ')[0];
     }
@@ -133,9 +135,9 @@ You can define typecasts for attributes on your custom models:
 
 ```ts
 class User extends Model<'users'> {
-    declare public name: string;
-    declare public createdAt: Date;
-    
+    public declare name: string;
+    public declare createdAt: Date;
+
     protected casts = {
         createdAt: Date,
     };
@@ -158,16 +160,17 @@ function api(url, options = {}) {
         options.headers['Content-Type'] = 'application/vnd.api+json';
     }
 
-    return fetch('http://example.org/api/' + url, options)
-    	.then(async response => {
-        	if (response.status === 204) {
+    return fetch('http://example.org/api/' + url, options).then(
+        async (response) => {
+            if (response.status === 204) {
                 return { response };
             } else {
                 const document = await response.json();
                 const data = models.sync(document);
                 return { response, document, data };
             }
-    	});
+        }
+    );
 }
 
 api('users/1').then(({ data }) => {
@@ -185,9 +188,9 @@ api(user.links.self, {
     body: {
         data: {
             ...user.identifier(),
-            attributes: { name: 'Changed' }
-        }
-    }
+            attributes: { name: 'Changed' },
+        },
+    },
 });
 ```
 
@@ -199,7 +202,7 @@ Building query strings for your JSON:API requests can be tedious, and sometimes 
 import { Query } from 'json-api-models';
 
 const query = new Query({
-    'include': 'foo',
+    include: 'foo',
     'fields[users]': 'name',
 });
 

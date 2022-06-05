@@ -3,9 +3,9 @@ export const dogDocument = {
         type: 'dogs',
         id: '1',
         attributes: {
-            name: 'Rosie'
-        }
-    }
+            name: 'Rosie',
+        },
+    },
 };
 
 export const dogsDocument = {
@@ -14,17 +14,17 @@ export const dogsDocument = {
             type: 'dogs',
             id: '1',
             attributes: {
-                name: 'Rosie'
-            }
+                name: 'Rosie',
+            },
         },
         {
             type: 'dogs',
             id: '2',
             attributes: {
-                name: 'Wanda'
-            }
-        }
-    ]
+                name: 'Wanda',
+            },
+        },
+    ],
 };
 
 export const catWithFriendDocument = {
@@ -33,8 +33,8 @@ export const catWithFriendDocument = {
         id: '1',
         relationships: {
             friend: {
-                data: { type: 'dogs', id: '1' }
-            }
+                data: { type: 'dogs', id: '1' },
+            },
         },
     },
     included: [
@@ -42,8 +42,8 @@ export const catWithFriendDocument = {
             type: 'dogs',
             id: '1',
             attributes: {
-                name: 'Rosie'
-            }
+                name: 'Rosie',
+            },
         },
-    ]
+    ],
 };
