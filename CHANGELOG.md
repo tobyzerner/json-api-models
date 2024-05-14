@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0-beta.1] - 2024-05-14
+
 ### ⚠️ Breaking Changes
 
 -   Rewrite TypeScript support to allow Intellisense based on JSON:API resource schema. For example:
@@ -117,7 +119,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.8...HEAD
+[unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.1...HEAD
+[0.2.0-beta.1]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.8...v0.2.0-beta.1
 [0.1.0-beta.8]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.7...v0.1.0-beta.8
 [0.1.0-beta.7]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.6...v0.1.0-beta.7
 [0.1.0-beta.6]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.5...v0.1.0-beta.6
