@@ -18,11 +18,11 @@ const models = new Store();
 // Sync a JSON:API response document to the store
 models.sync({
     data: {
-        type: 'humans',
+        type: 'users',
         id: '1',
         attributes: { name: 'Toby' },
         relationships: {
-            dog: { data: { type: 'dogs', id: '1' } },
+            pet: { data: { type: 'dogs', id: '1' } },
         },
     },
     included: [
@@ -35,20 +35,22 @@ models.sync({
 });
 
 // Resource data is transformed into easy-to-consume models
-const human = models.find('humans', '1');
-human.name; // Toby
-human.dog; // { type: 'dogs', id: '1', name: 'Rosie' }
+const user = models.find('users', '1');
+user.name; // Toby
+user.pet; // { type: 'dogs', id: '1', name: 'Rosie' }
 ```
 
 ### Syncing JSON:API Data
 
-Use the `sync` method to load your JSON:API response document into the store. Both the primary `data` and any `included` resources will be synced. The return value will be a model, or an array of models, corresponding to the primary data.
+Use the `sync` method to load your JSON:API response document into the store. Both the primary `data` and any `included`
+resources will be synced. The return value will be a model, or an array of models, corresponding to the primary data.
 
 ```ts
 const model = models.sync(document);
 ```
 
-If any of the synced resources already exist within the store, the new data will be **merged** into the old model. The model instance will not change so references to it throughout your application will remain intact.
+If any of the synced resources already exist within the store, the new data will be **merged** into the old model. The
+model instance will not change so references to it throughout your application will remain intact.
 
 You can also sync an individual resource using the `syncResource` method:
 
@@ -62,12 +64,13 @@ const model = models.syncResource({
 
 ### Retrieving Models
 
-Specific models can be retrieved from the store using the `find` method. Pass it a type and an ID, a resource identifier object, or an array of resource identifier objects:
+Specific models can be retrieved from the store using the `find` method. Pass it a type and an ID, a resource identifier
+object, or an array of resource identifier objects:
 
 ```ts
-const model = models.find('users', '1');
-const model = models.find({ type: 'users', id: '1' });
-const models = models.find([
+const user = models.find('users', '1');
+const user = models.find({ type: 'users', id: '1' });
+const users = models.find([
     { type: 'users', id: '1' },
     { type: 'users', id: '2' },
 ]);
@@ -76,21 +79,24 @@ const models = models.find([
 Retrieve all of the models of a given type using the `findAll` method:
 
 ```ts
-const models = models.findAll('users');
+const users = models.findAll('users');
 ```
 
 ### Working with Models
 
-Models are a _superset_ of JSON:API resource objects, meaning they contain all of the members you would expect (`type`, `id`, `attributes`, `relationships`, `meta`, `links`) plus some additional functionality.
+Models are a _superset_ of JSON:API resource objects, meaning they contain all of the members you would
+expect (`type`, `id`, `attributes`, `relationships`, `meta`, `links`) plus some additional functionality.
 
-Getters are automatically defined for all fields, allowing you to easily access their contents. Relationship fields are automatically resolved to their related models (if present within the store):
+Getters are automatically defined for all fields, allowing you to easily access their contents. Relationship fields are
+automatically resolved to their related models (if present within the store):
 
 ```ts
 model.name; // => model.attributes.name
-model.dog; // => models.find(model.relationships.dog.data)
+model.pet; // => models.find(model.relationships.pet.data)
 ```
 
-To easily retrieve a resource identifier object for the model, the `identifier` method is available. This is useful when constructing relationships in JSON:API request documents.
+To easily retrieve a resource identifier object for the model, the `identifier` method is available. This is useful when
+constructing relationships in JSON:API request documents.
 
 ```ts
 model.identifier(); // { type: 'users', id: '1' }
@@ -98,7 +104,8 @@ model.identifier(); // { type: 'users', id: '1' }
 
 ### Forgetting Models
 
-Remove a model from the store using the `forget` method, which accepts a resource identifier object. This means you can pass a model directly into it:
+Remove a model from the store using the `forget` method, which accepts a resource identifier object. This means you can
+pass a model directly into it:
 
 ```ts
 models.forget(user);
@@ -106,15 +113,13 @@ models.forget(user);
 
 ### Custom Models
 
-You can define custom model classes to add your own functionality. Custom models must extend the `Model` base class. This is useful if you wish to add any custom getters or methods to models for a specific resource type, and also to define types for each resource field:
+You can define custom model classes to add your own functionality. Custom models must extend the `Model` base class.
+This is useful if you wish to add any custom getters or methods to models for a specific resource type:
 
 ```ts
 import { Model } from 'json-api-models';
 
-class User extends Model<'users'> {
-    public declare name: string;
-    public declare age: number;
-
+class User extends Model {
     get firstName() {
         return this.name.split(' ')[0];
     }
@@ -129,24 +134,45 @@ const models = new Store({
 });
 ```
 
-#### Attribute Casts
+### TypeScript
 
-You can define typecasts for attributes on your custom models:
+For TypeScript autocompletion of model attributes and relationships, provide the raw JSON:API resource schema when defining your models.
 
 ```ts
-class User extends Model<'users'> {
-    public declare name: string;
-    public declare createdAt: Date;
-
-    protected casts = {
-        createdAt: Date,
+type UsersSchema = {
+    type: 'users';
+    id: string;
+    attributes: {
+        name: string;
     };
-}
+    relationships: {
+        dog: { data?: { type: 'dogs'; id: string } | null };
+    };
+};
+
+class User extends Model<UsersSchema> {}
+```
+
+To type related resources, you can provide a collection of all models as the second generic.
+
+```ts
+type DogsSchema = {
+    // ...
+};
+
+type Schemas = {
+    users: User;
+    dogs: Dog;
+};
+
+class User extends Model<UsersSchema, Schemas> {}
+class Dog extends Model<DogsSchema, Schemas> {}
 ```
 
 ### API Consumption Tips
 
-This library is completely unopinionated about how you interact with your JSON:API server. It merely gives you an easy way to work with the resulting JSON:API data. An example integration with `fetch` is demonstrated below:
+This library is completely unopinionated about how you interact with your JSON:API server. It merely gives you an easy
+way to work with the resulting JSON:API data. An example integration with `fetch` is demonstrated below:
 
 ```ts
 const models = new Store();
@@ -169,7 +195,7 @@ function api(url, options = {}) {
                 const data = models.sync(document);
                 return { response, document, data };
             }
-        }
+        },
     );
 }
 
@@ -178,7 +204,9 @@ api('users/1').then(({ data }) => {
 });
 ```
 
-When constructing API requests, remember that JSON:API resource objects contain `links` that can be used instead of rebuilding the URL. Also, models contain an `identifier` method that can be used to spread the `type` and `id` members into the document `data` (required by the specification). Here is an example of a request to update a resource:
+When constructing API requests, remember that JSON:API resource objects contain `links` that can be used instead of
+rebuilding the URL. Also, models contain an `identifier` method that can be used to spread the `type` and `id` members
+into the document `data` (required by the specification). Here is an example of a request to update a resource:
 
 ```ts
 const user = models.find('users', '1');
@@ -192,29 +220,6 @@ api(user.links.self, {
         },
     },
 });
-```
-
-### Building Queries
-
-Building query strings for your JSON:API requests can be tedious, and sometimes they may need to be constructed dynamically with merge logic for certain parameters. The `Query` class takes care of this:
-
-```ts
-import { Query } from 'json-api-models';
-
-const query = new Query({
-    include: 'foo',
-    'fields[users]': 'name',
-});
-
-query.append('include', 'bar');
-query.append('fields[users]', 'age');
-
-query.toString(); // include=foo,bar&fields[users]=name,age
-
-query.delete('fields[users]');
-query.set('include', 'replaced');
-
-query.toString(); // include=replaced
 ```
 
 ## Contributing

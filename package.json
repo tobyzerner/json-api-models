@@ -4,9 +4,7 @@
     "version": "0.1.0-beta.8",
     "author": "Toby Zerner",
     "license": "MIT",
-    "main": "./dist/index.cjs.js",
     "module": "./dist/index.es.js",
-    "unpkg": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "files": [
         "src",
@@ -16,22 +14,21 @@
     ],
     "scripts": {
         "test": "jest",
-        "build": "rollup -c",
-        "build:watch": "rollup -cw",
+        "build": "rollup -c && tsc --emitDeclarationOnly --declaration",
         "release": "release-it --npm.tag=latest"
     },
     "devDependencies": {
-        "@release-it/keep-a-changelog": "^2.3.0",
-        "@rollup/plugin-typescript": "^8.2.5",
+        "@release-it/keep-a-changelog": "^5.0.0",
+        "@rollup/plugin-typescript": "^11.1.6",
+        "@rollup/plugin-terser": "^0.4.4",
         "@types/jest": "^26.0.20",
-        "jest": "^26.6.3",
-        "prettier": "^2.6.2",
-        "release-it": "^14.11.5",
-        "rollup": "^2.56.3",
-        "rollup-plugin-terser": "^7.0.2",
-        "ts-jest": "^26.4.4",
-        "tslib": "^2.3.1",
-        "typescript": "^4.6.3"
+        "jest": "^29.7.0",
+        "prettier": "^3.2.5",
+        "release-it": "^17.2.1",
+        "rollup": "^4.17.2",
+        "ts-jest": "^29.1.2",
+        "tslib": "^2.6.2",
+        "typescript": "^5.4"
     },
     "release-it": {
         "github": {

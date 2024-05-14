@@ -1,64 +1,54 @@
 import { Model } from './model';
-import { JsonApiDocument, JsonApiIdentifier, JsonApiResource } from './types';
+import {
+    JsonApiDocument,
+    JsonApiIdentifier,
+    JsonApiResource,
+    ModelForType,
+    ModelMap,
+    SchemaCollection,
+} from './types';
 
-type Graph = {
-    [type: string]: {
-        [id: string]: any;
-    };
-};
+export class Store<Schemas extends SchemaCollection = {}> {
+    protected graph: { [type: string]: { [id: string]: any } } = {};
 
-export type ModelConstructor<Type extends string> = {
-    new (data: JsonApiResource<Type>, store: Store): Model<Type>;
-};
+    public constructor(public models: ModelMap<Schemas> = {}) {}
 
-export type ModelCollection<Models> = {
-    [Type in keyof Models & string]: ModelConstructor<Type>;
-} & { '*'?: ModelConstructor<any> };
-
-export type ModelForType<
-    Type extends string,
-    Models extends ModelCollection<Models>
-> = Type extends keyof Models ? InstanceType<Models[Type]> : Model;
-
-export class Store<Models extends ModelCollection<Models> = any> {
-    protected graph: Graph = {};
-
-    public constructor(public models: Models = {} as Models) {}
-
-    public find<Type extends string>(
-        identifier: JsonApiIdentifier<Type>
-    ): ModelForType<Type, Models> | null;
-    public find<Type extends string>(
-        identifiers: JsonApiIdentifier<Type>[]
-    ): ModelForType<Type, Models>[];
-    public find<Type extends string>(
+    public find<Type extends (keyof Schemas & string) | (string & {})>(
+        identifier: JsonApiIdentifier<Type> | null,
+    ): ModelForType<Type, Schemas> | null;
+    public find<Type extends (keyof Schemas & string) | (string & {})>(
+        identifiers: JsonApiIdentifier<Type>[],
+    ): ModelForType<Type, Schemas>[];
+    public find<Type extends (keyof Schemas & string) | (string & {})>(
         type: Type,
-        id: string
-    ): ModelForType<Type, Models> | null;
-    public find<Type extends string>(
-        a: JsonApiIdentifier<Type> | JsonApiIdentifier<Type>[] | string,
-        b?: string
+        id: string,
+    ): ModelForType<Type, Schemas> | null;
+    public find<Type extends (keyof Schemas & string) | (string & {})>(
+        a: JsonApiIdentifier<Type> | JsonApiIdentifier<Type>[] | Type | null,
+        b?: string,
     ) {
         if (a === null) {
             return null;
         }
 
         if (Array.isArray(a)) {
-            return a.map((identifier: JsonApiIdentifier<Type>) =>
-                this.find(identifier)
-            );
+            return a.map((identifier) => this.find(identifier));
         }
 
         if (typeof a === 'object') {
             return this.find(a.type, a.id);
         }
 
-        return (this.graph[a] && this.graph[a][b]) || null;
+        if (b) {
+            return this.graph[a]?.[b] || null;
+        }
+
+        return null;
     }
 
-    public findAll<Type extends string>(
-        type: Type
-    ): ModelForType<Type, Models>[] {
+    public findAll<Type extends (keyof Schemas & string) | (string & {})>(
+        type: Type,
+    ): ModelForType<Type, Schemas>[] {
         if (!this.graph[type]) {
             return [];
         }
@@ -66,23 +56,19 @@ export class Store<Models extends ModelCollection<Models> = any> {
         return Object.keys(this.graph[type]).map((id) => this.graph[type][id]);
     }
 
-    public sync<Type extends string>(
-        document: JsonApiDocument<Type>
-    ): ModelForType<Type, Models> | ModelForType<Type, Models>[] | null {
-        const syncResource = this.syncResource.bind(this);
-
-        if ('included' in document) {
-            document.included.map(syncResource);
-        }
+    public sync<Type extends (keyof Schemas & string) | (string & {})>(
+        document: JsonApiDocument<Type>,
+    ): ModelForType<Type, Schemas> | ModelForType<Type, Schemas>[] | null {
+        document.included?.map((resource) => this.syncResource(resource));
 
         return Array.isArray(document.data)
-            ? document.data.map(syncResource)
-            : syncResource(document.data);
+            ? document.data.map((resource) => this.syncResource(resource))
+            : this.syncResource(document.data);
     }
 
-    public syncResource<Type extends string>(
-        data: JsonApiResource<Type>
-    ): ModelForType<Type, Models> {
+    public syncResource<Type extends (keyof Schemas & string) | (string & {})>(
+        data: JsonApiResource<Type>,
+    ): ModelForType<Type, Schemas> {
         const { type, id } = data;
 
         this.graph[type] = this.graph[type] || {};
@@ -96,13 +82,27 @@ export class Store<Models extends ModelCollection<Models> = any> {
         return this.graph[type][id];
     }
 
-    protected createModel<Type extends string>(
-        data: JsonApiResource<Type>
-    ): ModelForType<Type, Models> {
-        const ModelClass =
-            this.models[data.type as keyof Models] || this.models['*'] || Model;
+    public createModel<Type extends (keyof Schemas & string) | (string & {})>(
+        data: JsonApiResource<Type>,
+    ): ModelForType<Type, Schemas> {
+        const ModelClass = this.models[data.type] || Model;
 
-        return new ModelClass(data, this) as ModelForType<Type, Models>;
+        return new Proxy(new ModelClass(data), {
+            get: (target, prop, receiver) => {
+                if (typeof prop === 'string') {
+                    if (target.attributes?.[prop]) {
+                        return target.attributes[prop];
+                    }
+                    const data = target.relationships?.[prop]?.data;
+                    if (data) {
+                        return Array.isArray(data)
+                            ? this.find(data)
+                            : this.find(data);
+                    }
+                }
+                return Reflect.get(target, prop, receiver);
+            },
+        }) as ModelForType<Type, Schemas>;
     }
 
     public forget(data: JsonApiIdentifier): void {

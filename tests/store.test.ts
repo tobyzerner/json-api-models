@@ -63,6 +63,16 @@ describe('Store', () => {
             const model = store.find('dogs', '1');
             expect(model).toBeInstanceOf(Model);
         });
+
+        it('should proxy models to allow quick attribute and related resource access', () => {
+            const model = store.sync(catWithFriendDocument) as Model;
+            expect(model.friend).toMatchObject(
+                catWithFriendDocument.data.relationships.friend.data,
+            );
+            expect(model.friend.name).toBe(
+                catWithFriendDocument.included[0].attributes.name,
+            );
+        });
     });
 
     describe('forget', () => {
