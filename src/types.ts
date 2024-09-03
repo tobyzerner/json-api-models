@@ -1,7 +1,7 @@
 import { Model } from './model.ts';
 
 export interface JsonApiDocument<Type extends string = string> {
-    data: JsonApiResource<Type> | JsonApiResource<Type>[];
+    data: JsonApiResource<Type> | JsonApiResource<Type>[] | null;
     included?: JsonApiResource[];
     meta?: Record<string, any>;
     links?: Record<string, any>;

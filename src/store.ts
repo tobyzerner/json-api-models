@@ -61,9 +61,15 @@ export class Store<Schemas extends SchemaCollection = {}> {
     ): ModelForType<Type, Schemas> | ModelForType<Type, Schemas>[] | null {
         document.included?.map((resource) => this.syncResource(resource));
 
-        return Array.isArray(document.data)
-            ? document.data.map((resource) => this.syncResource(resource))
-            : this.syncResource(document.data);
+        if (Array.isArray(document.data)) {
+            return document.data.map((resource) => this.syncResource(resource));
+        }
+
+        if (document.data) {
+            return this.syncResource(document.data);
+        }
+
+        return null;
     }
 
     public syncResource<Type extends (keyof Schemas & string) | (string & {})>(
