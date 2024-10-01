@@ -12,8 +12,6 @@ class ModelBase<Schema extends JsonApiResource = JsonApiResource> {
     public meta: Schema['meta'] = {};
     public links: Schema['links'] = {};
 
-    [field: string]: any;
-
     constructor(data: Schema) {
         this.type = data.type;
         this.id = data.id;

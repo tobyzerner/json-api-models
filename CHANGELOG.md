@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Remove index signature from `Model`
+
 ## [0.2.0-beta.3] - 2024-09-03
 
 ### Added
