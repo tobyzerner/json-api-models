@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0-beta.5] - 2024-10-02
+
 ### Fixed
 
 -   Fix falsy attribute values not being returned
@@ -136,7 +138,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.4...HEAD
+[unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.5...HEAD
+[0.2.0-beta.5]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.4...v0.2.0-beta.5
 [0.2.0-beta.4]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.3...v0.2.0-beta.4
 [0.2.0-beta.3]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.1...v0.2.0-beta.3
 [0.2.0-beta.1]: https://github.com/tobyzerner/json-api-models/compare/v0.1.0-beta.8...v0.2.0-beta.1
