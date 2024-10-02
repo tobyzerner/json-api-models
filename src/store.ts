@@ -96,11 +96,11 @@ export class Store<Schemas extends SchemaCollection = {}> {
         return new Proxy(new ModelClass(data), {
             get: (target, prop, receiver) => {
                 if (typeof prop === 'string') {
-                    if (target.attributes?.[prop]) {
+                    if (target.attributes?.[prop] !== undefined) {
                         return target.attributes[prop];
                     }
                     const data = target.relationships?.[prop]?.data;
-                    if (data) {
+                    if (data !== undefined) {
                         return Array.isArray(data)
                             ? this.find(data)
                             : this.find(data);

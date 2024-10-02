@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fix falsy attribute values not being returned
+
 ## [0.2.0-beta.4] - 2024-10-01
 
 ### Changed
