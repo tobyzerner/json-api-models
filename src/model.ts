@@ -56,7 +56,7 @@ type ProxiedModel<
     Schemas extends Record<string, JsonApiResource>,
 > = Schema &
     Schema['attributes'] & {
-        [Property in keyof NonNullable<Schema['relationships']>]: NonNullable<
+        [Property in keyof NonNullable<Schema['relationships']>]?: NonNullable<
             NonNullable<Schema['relationships']>[Property]
         > extends { data?: infer Data }
             ? Data extends { type: infer RelatedType extends string }
