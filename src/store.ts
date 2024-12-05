@@ -93,22 +93,7 @@ export class Store<Schemas extends SchemaCollection = {}> {
     ): ModelForType<Type, Schemas> {
         const ModelClass = this.models[data.type] || Model;
 
-        return new Proxy(new ModelClass(data), {
-            get: (target, prop, receiver) => {
-                if (typeof prop === 'string') {
-                    if (target.attributes?.[prop] !== undefined) {
-                        return target.attributes[prop];
-                    }
-                    const data = target.relationships?.[prop]?.data;
-                    if (data !== undefined) {
-                        return Array.isArray(data)
-                            ? this.find(data)
-                            : this.find(data);
-                    }
-                }
-                return Reflect.get(target, prop, receiver);
-            },
-        }) as ModelForType<Type, Schemas>;
+        return new ModelClass(data, this) as ModelForType<Type, Schemas>;
     }
 
     public forget(data: JsonApiIdentifier): void {

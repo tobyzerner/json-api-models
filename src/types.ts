@@ -1,4 +1,5 @@
 import { Model } from './model.ts';
+import { Store } from './store.ts';
 
 export interface JsonApiDocument<Type extends string = string> {
     data: JsonApiResource<Type> | JsonApiResource<Type>[] | null;
@@ -43,10 +44,13 @@ export type SchemaCollection = { [Type in string]: JsonApiResource<Type> };
 export type ModelMap<Schemas extends SchemaCollection = SchemaCollection> = {
     [Type in keyof Schemas & string]?: new (
         data: JsonApiResource<Type>,
+        store: Store<Schemas>,
     ) => Schemas[Type];
 };
 
 export type ModelForType<
     Type extends string,
-    Schemas,
-> = Type extends keyof Schemas ? Schemas[Type] : Model<JsonApiResource<Type>>;
+    Schemas extends SchemaCollection,
+> = Type extends keyof Schemas
+    ? Model<Schemas[Type], Schemas>
+    : Model<JsonApiResource<Type>, Schemas>;

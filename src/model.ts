@@ -1,8 +1,5 @@
 import { JsonApiResource, ModelForType, SchemaCollection } from './types';
-
-type PartialJsonApiResource<T extends JsonApiResource> = {
-    [P in keyof T]?: Partial<T[P]>;
-};
+import { Store } from './store.ts';
 
 class ModelBase<Schema extends JsonApiResource = JsonApiResource> {
     public type: Schema['type'];
@@ -12,7 +9,10 @@ class ModelBase<Schema extends JsonApiResource = JsonApiResource> {
     public meta: Schema['meta'] = {};
     public links: Schema['links'] = {};
 
-    constructor(data: Schema) {
+    constructor(
+        data: Schema,
+        protected store: Store,
+    ) {
         this.type = data.type;
         this.id = data.id;
 
@@ -32,21 +32,71 @@ class ModelBase<Schema extends JsonApiResource = JsonApiResource> {
     /**
      * Merge new JSON:API resource data into the model.
      */
-    public merge(data: PartialJsonApiResource<Schema>): void {
+    public merge(
+        data: Omit<JsonApiResource<Schema['type']>, 'type' | 'id'>,
+    ): void {
         this.links = data.links ?? this.links;
         this.meta = data.meta ?? this.meta;
 
         if (data.attributes) {
             Object.assign(this.attributes, data.attributes);
+
+            Object.keys(data.attributes).forEach((name) => {
+                if (
+                    Object.getOwnPropertyDescriptor(
+                        Object.getPrototypeOf(this),
+                        name,
+                    ) ||
+                    Object.getOwnPropertyDescriptor(this, name)
+                ) {
+                    return;
+                }
+
+                Object.defineProperty(this, name, {
+                    get: () => this.attributes[name],
+                    configurable: true,
+                    enumerable: true,
+                });
+            });
         }
 
         if (data.relationships) {
             Object.entries(data.relationships).forEach(
                 ([name, relationship]) => {
                     this.relationships[name] = this.relationships[name] || {};
+
                     Object.assign(this.relationships[name], relationship);
+
+                    if (
+                        Object.getOwnPropertyDescriptor(
+                            Object.getPrototypeOf(this),
+                            name,
+                        ) ||
+                        Object.getOwnPropertyDescriptor(this, name)
+                    ) {
+                        return;
+                    }
+
+                    Object.defineProperty(this, name, {
+                        get: () => this.getRelationship(name),
+                        configurable: true,
+                        enumerable: true,
+                    });
                 },
             );
+        }
+    }
+
+    private getRelationship(name: string) {
+        const data = this.relationships[name].data;
+
+        // https://github.com/microsoft/TypeScript/issues/14107
+        if (Array.isArray(data)) {
+            return this.store.find(data);
+        }
+
+        if (data) {
+            return this.store.find(data);
         }
     }
 }
@@ -79,4 +129,5 @@ export const Model: new <
     Schemas extends SchemaCollection = SchemaCollection,
 >(
     data: JsonApiResource<Schema['type']>,
+    store: Store<Schemas>,
 ) => Model<Schema, Schemas> = ModelBase as any;
