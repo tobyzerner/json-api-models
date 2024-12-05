@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Revert to non-proxy implementation of model fields
+
+### Fixed
+
+-   Make model relationship fields optional
+
 ## [0.2.0-beta.5] - 2024-10-02
 
 ### Fixed
