@@ -1,10 +1,8 @@
-import { Model } from './model';
+import { Model, ModelForType, ModelMap } from './model';
 import {
     JsonApiDocument,
     JsonApiIdentifier,
     JsonApiResource,
-    ModelForType,
-    ModelMap,
     SchemaCollection,
 } from './types';
 

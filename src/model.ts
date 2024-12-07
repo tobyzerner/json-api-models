@@ -1,7 +1,10 @@
-import { JsonApiResource, ModelForType, SchemaCollection } from './types';
+import { JsonApiResource, SchemaCollection } from './types';
 import { Store } from './store.ts';
 
-class ModelBase<Schema extends JsonApiResource = JsonApiResource> {
+class ModelBase<
+    Schema extends JsonApiResource = JsonApiResource,
+    Schemas extends SchemaCollection = SchemaCollection,
+> {
     public type: Schema['type'];
     public id: Schema['id'];
     public attributes: NonNullable<Schema['attributes']> = {};
@@ -11,7 +14,7 @@ class ModelBase<Schema extends JsonApiResource = JsonApiResource> {
 
     constructor(
         data: Schema,
-        protected store: Store,
+        protected store: Store<Schemas>,
     ) {
         this.type = data.type;
         this.id = data.id;
@@ -103,7 +106,7 @@ class ModelBase<Schema extends JsonApiResource = JsonApiResource> {
 
 type ProxiedModel<
     Schema extends JsonApiResource,
-    Schemas extends Record<string, JsonApiResource>,
+    Schemas extends SchemaCollection,
 > = Schema &
     Schema['attributes'] & {
         [Property in keyof NonNullable<Schema['relationships']>]?: NonNullable<
@@ -131,3 +134,19 @@ export const Model: new <
     data: JsonApiResource<Schema['type']>,
     store: Store<Schemas>,
 ) => Model<Schema, Schemas> = ModelBase as any;
+
+export type ModelMap<Schemas extends SchemaCollection = SchemaCollection> = {
+    [Type in keyof Schemas & string]?: new (
+        data: JsonApiResource<Type>,
+        store: Store<Schemas>,
+    ) => Schemas[Type];
+};
+
+export type ModelForType<
+    Type extends string,
+    Schemas extends SchemaCollection,
+> = Type extends keyof Schemas
+    ? Schemas[Type] extends ModelBase<JsonApiResource<Type>, Schemas>
+        ? Schemas[Type]
+        : Model<JsonApiResource<Type>, Schemas>
+    : Model<JsonApiResource<Type>, Schemas>;
