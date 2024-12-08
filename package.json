@@ -1,7 +1,7 @@
 {
     "name": "json-api-models",
     "description": "A lightweight layer for working with JSON:API data.",
-    "version": "0.2.0-beta.7",
+    "version": "0.2.0-beta.8",
     "author": "Toby Zerner",
     "license": "MIT",
     "module": "./dist/index.es.js",

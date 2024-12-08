@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0-beta.8] - 2024-12-09
+
 ### Fixed
 
 -   Fix Schemas not being passed through to `Model.store`
@@ -158,7 +160,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.7...HEAD
+[unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.8...HEAD
+[0.2.0-beta.8]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.7...v0.2.0-beta.8
 [0.2.0-beta.7]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.6...v0.2.0-beta.7
 [0.2.0-beta.6]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.5...v0.2.0-beta.6
 [0.2.0-beta.5]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.4...v0.2.0-beta.5
