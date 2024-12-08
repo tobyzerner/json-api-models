@@ -124,7 +124,7 @@ export type Model<
     Schema extends JsonApiResource = JsonApiResource,
     Schemas extends SchemaCollection = SchemaCollection,
 > = JsonApiResource<Schema['type']> &
-    ModelBase<Schema> &
+    ModelBase<Schema, Schemas> &
     ProxiedModel<Schema, Schemas>;
 
 export const Model: new <
