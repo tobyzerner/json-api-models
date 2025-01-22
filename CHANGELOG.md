@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fix reactivity systems not picking up when new properties are added
+
 ## [0.2.0-beta.8] - 2024-12-09
 
 ### Fixed

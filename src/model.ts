@@ -55,6 +55,8 @@ class ModelBase<
                     return;
                 }
 
+                (this as any)[name] = null;
+
                 Object.defineProperty(this, name, {
                     get: () => this.attributes[name],
                     configurable: true,
@@ -79,6 +81,8 @@ class ModelBase<
                     ) {
                         return;
                     }
+
+                    (this as any)[name] = null;
 
                     Object.defineProperty(this, name, {
                         get: () => this.getRelationship(name),
