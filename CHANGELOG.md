@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0-beta.9] - 2025-01-22
+
 ### Fixed
 
 -   Fix reactivity systems not picking up when new properties are added
@@ -164,7 +166,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.8...HEAD
+[unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.9...HEAD
+[0.2.0-beta.9]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.8...v0.2.0-beta.9
 [0.2.0-beta.8]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.7...v0.2.0-beta.8
 [0.2.0-beta.7]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.6...v0.2.0-beta.7
 [0.2.0-beta.6]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.5...v0.2.0-beta.6
