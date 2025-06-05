@@ -112,17 +112,24 @@ type ProxiedModel<
     Schema extends JsonApiResource,
     Schemas extends SchemaCollection,
 > = Schema &
-    Schema['attributes'] & {
-        [Property in keyof NonNullable<Schema['relationships']>]?: NonNullable<
-            NonNullable<Schema['relationships']>[Property]
-        > extends { data?: infer Data }
-            ? Data extends { type: infer RelatedType extends string }
-                ? ModelForType<RelatedType, Schemas> | undefined
-                : Data extends { type: infer RelatedType extends string }[]
-                  ? ModelForType<RelatedType, Schemas>[]
-                  : null
-            : never;
-    };
+    Schema['attributes'] &
+    (Schema['relationships'] extends Record<string, never> | undefined
+        ? {}
+        : {
+              [Property in keyof NonNullable<
+                  Schema['relationships']
+              >]?: NonNullable<
+                  NonNullable<Schema['relationships']>[Property]
+              > extends { data?: infer Data }
+                  ? Data extends { type: infer RelatedType extends string }
+                      ? ModelForType<RelatedType, Schemas> | undefined
+                      : Data extends {
+                              type: infer RelatedType extends string;
+                          }[]
+                        ? ModelForType<RelatedType, Schemas>[]
+                        : null
+                  : never;
+          });
 
 export type Model<
     Schema extends JsonApiResource = JsonApiResource,
