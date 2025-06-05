@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0-beta.10] - 2025-06-06
+
 ### Fixed
 
 -   Fix Model type definition for schemas with empty relationships
@@ -170,7 +172,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.9...HEAD
+[unreleased]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.10...HEAD
+[0.2.0-beta.10]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.9...v0.2.0-beta.10
 [0.2.0-beta.9]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.8...v0.2.0-beta.9
 [0.2.0-beta.8]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.7...v0.2.0-beta.8
 [0.2.0-beta.7]: https://github.com/tobyzerner/json-api-models/compare/v0.2.0-beta.6...v0.2.0-beta.7
